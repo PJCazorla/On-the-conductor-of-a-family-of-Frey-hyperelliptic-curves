@@ -194,7 +194,7 @@ for i in [1..nCases] do
 			end if;
 			
 		/* ROW 4: q equal to r and q does not divide Delta, with f irreducible. */
-		elif (Delta mod r) nq 0 and IsIrreducible(fadic) then 
+		elif (Delta mod r) ne 0 and IsIrreducible(fadic) then 
 			if Valuation(cond, q) ne r then 
 				nIncorrect +:= 1;
 				print "CASE R2: prime q=r=", r, ", not dividing delta with f irreducible, expected=", r, ", actual=", Valuation(cond, q);
