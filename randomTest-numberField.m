@@ -42,7 +42,7 @@ function Minpolw(r);
 end function;
 
 /******************************************************
-** Name: grminus_a
+** Name: pol_C
 ** Description: Given a prime number r >= 3, as well as 
 **              the integer s and z^2, this function
 **              returns the defining polynomial of C, 
@@ -57,7 +57,7 @@ end function;
 ** Output: The defining polynomial of C, both over K 
 **         and over Qr.
 ******************************************************/
-function grminus_a(s, z2, r); 
+function pol_C(s, z2, r); 
 
 	/* Definition of the number fields and polynomial rings. */
     Kreal :=  NumberField(Minpolw(r));
@@ -151,7 +151,7 @@ for i in [1..nCases] do
 			
 			if valid then 
 				/* We build the polynomial f(x) */
-				f, fadic := grminus_a(s, z2, r);
+				f, fadic := pol_C(s, z2, r);
 				
 				/* We check if f has repeated roots by computing its discriminant */
 				if Discriminant(f) eq 0 then 
@@ -192,10 +192,12 @@ for i in [1..nCases] do
     for id in [id : id in Factorisation(cond) | not(IsEven(Norm(id[1])))] do 
     
 		q := (PrimeDivisors(Norm(id[1])))[1];
-		
+
+		/* Now we run each case/row in Table 2 */
+  
 		/* ROW 1 : q not equal to r and q does not divide s. */
-		if not (q eq r) and not (s mod q) eq 0 then 
-			if not(id[2] eq (r-1)/2) then
+		if q ne r and s mod q ne 0 then 
+			if id[2] ne (r-1)/2 then
 				nIncorrect +:= 1;
 				print "CASE Q1: prime q=", q, ", expected=", (r-1)/2, ", actual=", id[2];
 			elif verbose then 
@@ -203,8 +205,8 @@ for i in [1..nCases] do
 			end if;
 	
 		/* ROW 2 : q not equal to r and q divides s */ 
-        elif not (q eq r) then 
-			if not(id[2] eq (r-1)) then
+        elif q ne r then 
+			if id[2] ne (r-1) then
 				nIncorrect +:= 1;
 				print "CASE Q2: prime q=", q, ", expected=", r-1, ", actual=", id[2];
 			elif verbose then 
@@ -212,8 +214,8 @@ for i in [1..nCases] do
 			end if;
 		
 		/* ROW 3: q equal to r and q does not divide Delta, with f reducible. */
-		elif not((Delta mod r) eq 0) and not IsIrreducible(fadic) then 
-			if not(id[2] eq r-1) then 
+		elif (Delta mod r) ne 0 and not IsIrreducible(fadic) then 
+			if id[2] ne r-1 then 
 				nIncorrect +:= 1;
 				print "CASE R1: prime q=r=", r, ", not dividing delta with f reducible, expected=", (r-1), ", actual=", id[2];
 			elif verbose then 
@@ -221,8 +223,8 @@ for i in [1..nCases] do
 			end if;
 			
 		/* ROW 4: q equal to r and q does not divide Delta, with f irreducible. */
-		elif not((Delta mod r) eq 0) and IsIrreducible(fadic) then 
-			if not(id[2] eq (3*(r-1)/2)) then 
+		elif (Delta mod r) ne 0 and IsIrreducible(fadic) then 
+			if id[2] ne (3*(r-1)/2) then 
 				nIncorrect +:= 1;
 				print "CASE R2: prime q=r=", r, ", not dividing delta with f irreducible, expected=", 3*(r-1)/2, ", actual=", id[2];
 			elif verbose then 
@@ -231,7 +233,7 @@ for i in [1..nCases] do
 			
 		/* ROW 5: q equal to r and q divides Delta and s */
 		elif (s mod r) eq 0 then 
-			if not(id[2] eq (r-1)*(r+2)/2) then 
+			if id[2] ne (r-1)*(r+2)/2 then 
 				nIncorrect +:= 1;
 				print "CASE R3: prime q=r=", r, ", dividing delta and s, expected=", (r-1)*(r+2)/2, ", actual=", id[2];
 			elif verbose then 
@@ -240,7 +242,7 @@ for i in [1..nCases] do
 			
 		/* ROW 6: q equal to r and q divides Delta with v(Delta) = 1 and does not divide s. */
 		elif Valuation(Delta, r) eq 1 then 
-			if not(id[2] eq (r-1)*(r+5)/4) then 
+			if id[2] ne (r-1)*(r+5)/4 then 
 				nIncorrect +:= 1;
 				print "CASE R4: prime q=r=", r, ", with r not dividing s and v(Delta) = 1, expected=", (r-1)*(r+5)/4, ", actual=", id[2];
 			elif verbose then 
@@ -249,7 +251,7 @@ for i in [1..nCases] do
 		
 		/* ROW 7: q equal to r and q divides Delta with v(Delta) = 2 and does not divide s. */
 		elif Valuation(Delta, r) eq 2 then 
-			if not(id[2] eq 3*(r-1)/2) then 
+			if id[2] ne 3*(r-1)/2 then 
 				nIncorrect +:= 1;
 				print "CASE R5: prime q=r=", r, ", with r not dividing s and v(Delta) = 2, expected=", 3*(r-1)/2, ", actual=", id[2];
 			elif verbose then 
@@ -258,7 +260,7 @@ for i in [1..nCases] do
 		
 		/* ROW 8: q equal to r and q divides Delta with v(Delta) >= 2 and does not divide s. */
 		else 
-			if not(id[2] eq r-1) then
+			if id[2] ne r-1 then
 				nIncorrect +:= 1;
 				print "CASE R6: prime q=r=", r, ", with r not dividing s and v(Delta)>=3, expected=", r-1, ", actual=", id[2];
 			elif verbose then 
