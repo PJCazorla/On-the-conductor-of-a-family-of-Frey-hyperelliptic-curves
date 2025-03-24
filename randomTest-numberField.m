@@ -101,7 +101,7 @@ rValues := [5,7];
 /* Parameter determining whether the correct results will be printed 
    or not. Incorrect results will always be printed, as well as the 
    beginning and end of the program.*/
-verbose := false;
+verbose := true;
 
 /******************************/
 
