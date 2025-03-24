@@ -81,7 +81,7 @@ for i in [1..nCases] do
 	
 	
 	/* We generate a pair of valid elements (s,z^2) and keep looping until we find them.
-       We recall that an element is valid if v_q(z^r) > v_q(s) for all primes q dividing s,
+       We recall that an element is valid if v_q(z^r) > v_q(s) for all primes q dividing s and Delta=s^2-z^{2r},
 	   and such that the associated hyperelliptic curve is indeed a hyperelliptic curve.
     */
 	valid := false;
@@ -149,7 +149,7 @@ for i in [1..nCases] do
 	
 	/* Computation of the conductor of the curve. */	
 	C := HyperellipticCurve(f);
-    cond := Conductor(C);
+   	cond := Conductor(C);
     
 	/* We define the quantity Delta. */
 	Delta := s^2-z2^(r);
@@ -163,10 +163,12 @@ for i in [1..nCases] do
 
 	/* If the set of primes of bad reductions coincide, we check the exponent at odd places. */
     for q in [q : q in badRed | q gt 2] do 
-    
+
+    	/* Now we run each case/row of Table 1 */
+
 		/* ROW 1 : q not equal to r and q does not divide s. */
-		if not (q eq r) and not (s mod q) eq 0 then 
-			if not(Valuation(cond, q) eq (r-1)/2) then
+		if (q ne r) and (s mod q) ne 0 then 
+			if Valuation(cond, q) ne (r-1)/2 then
 				nIncorrect +:= 1;
 				print "CASE Q1: prime q=", q, ", expected=", (r-1)/2, ", actual=", Valuation(cond, q);
 			elif verbose then 
@@ -174,8 +176,8 @@ for i in [1..nCases] do
 			end if;
 	
 		/* ROW 2 : q not equal to r and q divides s */ 
-        elif not (q eq r) then 
-			if not(Valuation(cond, q) eq (r-1)) then
+        elif q ne r then 
+			if Valuation(cond, q) ne (r-1) then
 				nIncorrect +:= 1;
 				print "CASE Q2: prime q=", q, ", expected=", r-1, ", actual=", Valuation(cond, q);
 			elif verbose then 
@@ -183,8 +185,8 @@ for i in [1..nCases] do
 			end if;
 		
 		/* ROW 3: q equal to r and q does not divide Delta, with f reducible. */
-		elif not((Delta mod r) eq 0) and not IsIrreducible(fadic) then 
-			if not(Valuation(cond, q) eq r-1) then 
+		elif (Delta mod r) ne 0 and not IsIrreducible(fadic) then 
+			if Valuation(cond, q) ne r-1 then 
 				nIncorrect +:= 1;
 				print "CASE R1: prime q=r=", r, ", not dividing delta with f reducible, expected=", (r-1), ", actual=", Valuation(cond, q);
 			elif verbose then 
@@ -192,8 +194,8 @@ for i in [1..nCases] do
 			end if;
 			
 		/* ROW 4: q equal to r and q does not divide Delta, with f irreducible. */
-		elif not((Delta mod r) eq 0) and IsIrreducible(fadic) then 
-			if not(Valuation(cond, q) eq r) then 
+		elif (Delta mod r) nq 0 and IsIrreducible(fadic) then 
+			if Valuation(cond, q) ne r then 
 				nIncorrect +:= 1;
 				print "CASE R2: prime q=r=", r, ", not dividing delta with f irreducible, expected=", r, ", actual=", Valuation(cond, q);
 			elif verbose then 
@@ -202,7 +204,7 @@ for i in [1..nCases] do
 			
 		/* ROW 5: q equal to r and q divides Delta and s */
 		elif (s mod r) eq 0 then 
-			if not(Valuation(cond, q) eq 2*r-1) then 
+			if Valuation(cond, q) ne 2*r-1 then 
 				nIncorrect +:= 1;
 				print "CASE R3: prime q=r=", r, ", dividing delta and s, expected=", (2*r-1), ", actual=", Valuation(cond, q);
 			elif verbose then 
@@ -211,7 +213,7 @@ for i in [1..nCases] do
 			
 		/* ROW 6: q equal to r and q divides Delta with v(Delta) = 1 and does not divide s. */
 		elif Valuation(Delta, r) eq 1 then 
-			if not(Valuation(cond, q) eq (3*r-1)/2) then 
+			if Valuation(cond, q) ne (3*r-1)/2 then 
 				nIncorrect +:= 1;
 				print "CASE R4: prime q=r=", r, ", with r not dividing s and v(Delta) = 1, expected=", (3*r-1)/2, ", actual=", Valuation(cond, q);
 			elif verbose then 
@@ -220,7 +222,7 @@ for i in [1..nCases] do
 		
 		/* ROW 7: q equal to r and q divides Delta with v(Delta) = 2 and does not divide s. */
 		elif Valuation(Delta, r) eq 2 then 
-			if not(Valuation(cond, q) eq r) then 
+			if Valuation(cond, q) ne r then 
 				nIncorrect +:= 1;
 				print "CASE R5: prime q=r=", r, ", with r not dividing s and v(Delta) = 2, expected=", (r), ", actual=", Valuation(cond, q);
 			elif verbose then 
@@ -229,7 +231,7 @@ for i in [1..nCases] do
 		
 		/* ROW 8: q equal to r and q divides Delta with v(Delta) >= 2 and does not divide s. */
 		else 
-			if not(Valuation(cond, q) eq r-1) then
+			if Valuation(cond, q) ne r-1 then
 				nIncorrect +:= 1;
 				print "CASE R6: prime q=r=", r, ", with r not dividing s and v(Delta)>=3, expected=", r-1, ", actual=", Valuation(cond, q);
 			elif verbose then 
