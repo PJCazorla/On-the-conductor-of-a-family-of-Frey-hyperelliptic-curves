@@ -44,20 +44,20 @@ end function;
 /******************************************************
 ** Name: pol_C
 ** Description: Given a prime number r >= 3, as well as 
-**              the integer s and z^2, this function
+**              the integer s and z, this function
 **              returns the defining polynomial of C, 
 **              as a polynomial over K. For convenience,
 **              it also returns the same polynomial over
 **              the r-adic integers.
 **
 ** Arguments: s -> Integer parameter.
-**            z2  -> Integer parameter, corresponding to z^2.
+**            z  -> Integer parameter, corresponding to z.
 **            r -> Prime number r >= 3.
 **            
 ** Output: The defining polynomial of C, both over K 
 **         and over Qr.
 ******************************************************/
-function pol_C(s, z2, r); 
+function pol_C(s, z, r); 
 
 	/* Definition of the number fields and polynomial rings. */
     Kreal :=  NumberField(Minpolw(r));
@@ -68,12 +68,12 @@ function pol_C(s, z2, r);
 	poladic := y^r;
 	for k in [1..(r-1)/2] do  
 		ck:=Integers()!(r*Binomial(r-k,k)/(r-k));
-		pol := pol + ck*(-1)^k*z2^k*x^(r-2*k);
-		poladic := poladic + ck*(-1)^k*z2^k*y^(r-2*k);
+		pol := pol + ck*(-1)^k*z^k*x^(r-2*k);
+		poladic := poladic + ck*(-1)^k*z^k*y^(r-2*k);
 	end for;
 	
-	pol := pol + 2*s;
-	poladic := poladic + 2*s;
+	pol := pol + s;
+	poladic := poladic + s;
 	
 	return pol, poladic;
 end function;
@@ -89,9 +89,9 @@ end function;
 /* Number of random cases to be tested. */
 nCases := 2;
 
-/* Maximum size, in absolute value of s and z^2. In other 
-   words, s and z^2 will be random integers with |s| <= maxSize
-   and |z^2| <= maxSize. */
+/* Maximum size, in absolute value of s and z. In other 
+   words, s and z will be random integers with |s| <= maxSize
+   and |z| <= maxSize. */
 maxSize := 100;
 
 /* List with the possible values of r, which will be randomly
@@ -117,7 +117,7 @@ for i in [1..nCases] do
 	r := Random(rValues);	
 	Q<y> := PolynomialRing(pAdicField(r, 30));
 	
-	/* We generate a pair of valid elements (s,z^2) and keep looping until we find them.
+	/* We generate a pair of valid elements (s,z) and keep looping until we find them.
        We recall that an element is valid if v_q(z^r) > v_q(s) for all primes q dividing s,
 	   and such that the associated hyperelliptic curve is indeed a hyperelliptic curve.
     */
@@ -126,7 +126,7 @@ for i in [1..nCases] do
 	while not valid do 
 	   
 		s := Random(-maxSize, maxSize);
-		z2 := Random(-maxSize, maxSize);
+		z := Random(-maxSize, maxSize);
 		
 		/* If s = 0, it is impossible for v_q(s) to be less than v_q(z^r), and 
 		   so the pair is automatically invalid, and so we look for a new one. */
@@ -140,7 +140,7 @@ for i in [1..nCases] do
 			
 			valid := true;
 			for q in primesDividingS do
-				if Valuation(s, q) ge r/2*Valuation(z2, q) then 
+				if Valuation(s, q) ge r*Valuation(z, q) then 
 					valid := false;
 					break;
 				end if;
@@ -151,7 +151,7 @@ for i in [1..nCases] do
 			
 			if valid then 
 				/* We build the polynomial f(x) */
-				f, fadic := pol_C(s, z2, r);
+				f, fadic := pol_C(s, z, r);
 				
 				/* We check if f has repeated roots by computing its discriminant */
 				if Discriminant(f) eq 0 then 
@@ -168,7 +168,7 @@ for i in [1..nCases] do
 	if verbose then 
 		print "------------------";
 		print "Test case ", i;
-		print "f=", f, "s=", s, ", z2=", z2;
+		print "f=", f, "s=", s, ", z=", z;
 	end if;
 	
 	/* Computation of the conductor of the curve, over the number field K. */	
@@ -176,7 +176,7 @@ for i in [1..nCases] do
     cond := Conductor(C);
     
 	/* We define the quantity Delta. */
-	Delta := s^2-z2^(r);
+	Delta := s^2-4*z^r;
 	
 	/* Firstly, we check that the primes of bad reductions are precisely
 	   2, r and those primes dividing delta. We do this by checking that 
@@ -185,7 +185,7 @@ for i in [1..nCases] do
 	badRed := PrimeDivisors(Norm(cond));
 	
 	if not(Set(badRed) eq Set([2, r] cat PrimeDivisors(Delta))) then 
-		print "Problematic case (s = ", s, ", z2= ", z2, ", r = ", r, ") - the set of bad reduction is ", badRed, ", but it should be", [2, r] cat PrimeDivisors(Delta);
+		print "Problematic case (s = ", s, ", z= ", z, ", r = ", r, ") - the set of bad reduction is ", badRed, ", but it should be", [2, r] cat PrimeDivisors(Delta);
 	end if;
 
 	/* If the set of primes of bad reductions coincide, we check the exponent at odd places. */

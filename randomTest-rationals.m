@@ -50,9 +50,9 @@ end function;
 /* Number of random cases to be tested. */
 nCases := 2;
 
-/* Maximum size, in absolute value of s and z^2. In other 
-   words, s and z^2 will be random integers with |s| <= maxSize
-   and |z^2| <= maxSize. */
+/* Maximum size, in absolute value of s and z. In other 
+   words, s and z will be random integers with |s| <= maxSize
+   and |z| <= maxSize. */
 maxSize := 100;
 
 /* List with the possible values of r, which will be randomly
@@ -80,7 +80,7 @@ for i in [1..nCases] do
 	Q<y> := PolynomialRing(pAdicField(r, 30));
 	
 	
-	/* We generate a pair of valid elements (s,z^2) and keep looping until we find them.
+	/* We generate a pair of valid elements (s,z) and keep looping until we find them.
        We recall that an element is valid if v_q(z^r) > v_q(s) for all primes q dividing s and Delta=s^2-z^{2r},
 	   and such that the associated hyperelliptic curve is indeed a hyperelliptic curve.
     */
@@ -89,21 +89,18 @@ for i in [1..nCases] do
 	while not valid do 
 	   
 		s := Random(-maxSize, maxSize);
-		z2 := Random(-maxSize, maxSize);
+		z := Random(-maxSize, maxSize);
 		
 		/* If s = 0, it is impossible for v_q(s) to be less than v_q(z^r), and 
 		   so the pair is automatically invalid, and so we look for a new one. */
-		if s eq 0 then 
-			continue;
-		else 
-			
+		if s ne 0
 			/* Condition 1: We check that the divisibility condition is 
 			   satisfied. */
 			primesDividingS := [q: q in PrimeDivisors(s) | IsOdd(q)];
 			
 			valid := true;
 			for q in primesDividingS do
-				if Valuation(s, q) ge r/2*Valuation(z2, q) then 
+				if Valuation(s, q) ge r*Valuation(z, q) then 
 					valid := false;
 					break;
 				end if;
@@ -122,12 +119,12 @@ for i in [1..nCases] do
 					/* For some of the conditions, it will be relevant to consider 
 					   the polynomial over Qr, and we do so by defining an AUXILIARY
 					   polynomial fadic. */
-					f := f + ck*(-1)^k*z2^(k)*x^(r-2*k);
-					fadic := fadic + ck*(-1)^k*z2^(k)*y^(r-2*k);
+					f := f + ck*(-1)^k*z^(k)*x^(r-2*k);
+					fadic := fadic + ck*(-1)^k*z^(k)*y^(r-2*k);
 				end for;
 				
-				f := f + 2*s;
-				fadic := fadic + 2*s;
+				f := f + s;
+				fadic := fadic + s;
 
 				/* We check if f has repeated roots by computing its discriminant */
 				if Discriminant(f) eq 0 then 
@@ -144,7 +141,7 @@ for i in [1..nCases] do
 	if verbose then 
 		print "------------------";
 		print "Test case ", i;
-		print "f=", f, "s=", s, ", z2=", z2;
+		print "f=", f, "s=", s, ", z=", z;
 	end if;
 	
 	/* Computation of the conductor of the curve. */	
@@ -152,13 +149,13 @@ for i in [1..nCases] do
    	cond := Conductor(C);
     
 	/* We define the quantity Delta. */
-	Delta := s^2-z2^(r);
+	Delta := s^2-4*z^(r);
 	
 	/* Firstly, we check that the primes of bad reductions are precisely
 	   2, r and those primes dividing delta. */
 	badRed := PrimeDivisors(cond);
 	if not(Set(badRed) eq Set([2, r] cat PrimeDivisors(Delta))) then 
-		print "Problematic case (s = ", s, ", z2= ", z2, ", r = ", r, ") - the set of bad reduction is ", badRed, ", but it should be", [2, r] cat PrimeDivisors(Delta);
+		print "Problematic case (s = ", s, ", z= ", z, ", r = ", r, ") - the set of bad reduction is ", badRed, ", but it should be", [2, r] cat PrimeDivisors(Delta);
 	end if;
 
 	/* If the set of primes of bad reductions coincide, we check the exponent at odd places. */
