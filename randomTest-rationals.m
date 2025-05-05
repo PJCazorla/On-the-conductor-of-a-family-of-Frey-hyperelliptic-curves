@@ -2,7 +2,7 @@
 ** MODULE NAME: randomTest-rationals
 **
 ** Authors: Pedro-Jose Cazorla Garcia and 
-**          Lucas Villagra-Torcomian
+**          Lucas Villagra Torcomian
 **
 ** Affiliations: Universidad Pontificia Comillas, Spain
 **               Simon Fraser University, Canada
@@ -14,7 +14,7 @@
 **                  C : y^2 = F(x),
 **              over Q, for several parameters of z and s.
 **              
-** Article: Cazorla-Garcia, P.J. and Villagra-Torcomian, L.
+** Article: Cazorla-Garcia, P.J. and Villagra Torcomian, L.
 **          "On the conductor of a family of Frey hyperellip-
 **          tic curves", available online in arxiv.
 **
