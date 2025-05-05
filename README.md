@@ -18,5 +18,4 @@ handbook)
                              of the conductor of several curves C(z,s) over the number field K, which
                              is the maximal totally real subextension of the cyclotomic field.
 
-**• examples.m**: We run some examples for each row of Tables 1 and 2
-
+**• examples.m**: We run some examples for each row of Tables 1 and 2.
