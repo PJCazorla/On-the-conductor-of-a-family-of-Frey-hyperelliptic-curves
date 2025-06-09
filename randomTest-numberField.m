@@ -27,11 +27,11 @@
 
 /******************************************************
 ** Name: Minpolw
-** Description: Given a prime number r >= 3, this function
+** Description: Given a prime number r >= 5, this function
 **              returns the minimal polynomial of 
 **              K = Q(zeta_r + zeta_r^{-1}).
 **
-** Arguments: r -> Prime number r >= 3.
+** Arguments: r -> Prime number r >= 5.
 **            
 ** Output: The minimal polynomial of K.
 ******************************************************/
