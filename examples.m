@@ -21,11 +21,11 @@
 
 /******************************************************
 ** Name: Minpolw
-** Description: Given a prime number r >= 3, this function
+** Description: Given a prime number r >= 5, this function
 **              returns the minimal polynomial of 
 **              K = Q(zeta_r + zeta_r^{-1}).
 **
-** Arguments: r -> Prime number r >= 3.
+** Arguments: r -> Prime number r >= 5.
 **            
 ** Output: The minimal polynomial of K.
 ******************************************************/
@@ -37,7 +37,7 @@ end function;
 
 /******************************************************
 ** Name: pol_C
-** Description: Given a prime number r >= 3, as well as 
+** Description: Given a prime number r >= 5, as well as 
 **              the integers s and z, this function
 **              returns the defining polynomial of C, 
 **              as a polynomial over K. For convenience,
@@ -46,7 +46,7 @@ end function;
 **
 ** Arguments: s -> Integer parameter.
 **            z  -> Integer parameter, corresponding to z.
-**            r -> Prime number r >= 3.
+**            r -> Prime number r >= 5.
 **            
 ** Output: The defining polynomial of C, both over K 
 **         and over Qr.
